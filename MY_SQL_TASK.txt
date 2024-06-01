@@ -1,0 +1,51 @@
+
+
+
+1. Second highest salary:
+
+SELECT dept_id, MAX(salary) AS second_highest_salary
+FROM employees
+WHERE salary < (
+    SELECT MAX(salary)
+    FROM employees AS e2
+    WHERE e2.dept_id = employees.dept_id
+)
+GROUP BY dept_id;
+
+
+2. Employees with Salaries Higher Than Their Departmental Average
+
+SELECT employee_id, first_name, last_name, dept_id, salary
+FROM employees
+WHERE salary > (
+    SELECT AVG(salary)
+    FROM employees AS e2
+    WHERE e2.dept_id = employees.dept_id
+);
+
+
+
+3. Find Duplicate Rows in SQL
+
+SELECT first_name, last_name, dept_id, COUNT(*)
+FROM employees
+GROUP BY first_name, last_name, dept_id
+HAVING COUNT(*) > 1;
+
+
+
+4. Display the last 40% of records from the Employee table
+
+SELECT *
+FROM employees
+ORDER BY employee_id
+OFFSET (SELECT COUNT(*) * 0.6 FROM employees) ROWS;
+
+
+5. Find the average salary of employees in each department, along with the department
+
+SELECT d.dept_name, e.dept_id, AVG(e.salary) AS avg_salary
+FROM employees e
+JOIN departments d ON e.dept_id = d.dept_id
+GROUP BY e.dept_id, d.dept_name
+HAVING COUNT(e.employee_id) > 1;
